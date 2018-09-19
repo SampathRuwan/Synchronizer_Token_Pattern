@@ -9,4 +9,8 @@ This project was develop to demonstrate the Synchronizer Token pattern in cross-
   5. To run the project type "java -jar target\demo-0.0.1-SNAPSHOT.jar".
   6. Open the application using "http://localhost:8080/".
 
+#### Sample Credentials
+user name : admin 
+
+Password : admin
   
