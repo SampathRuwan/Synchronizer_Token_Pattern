@@ -1,7 +1,7 @@
 # Synchronizer_Token_Pattern
 This project was develop to demonstrate the Synchronizer Token pattern in cross-site request forgery(CSRF).
 
-## Steps for Running the Project.
+### Steps for Running the Project.
   1. Clone the project.
   2. Go to the project folder.
   3. Open the Command Prompt and navigate to the project location.
