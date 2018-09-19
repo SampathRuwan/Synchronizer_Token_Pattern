@@ -1,13 +1,8 @@
 package com.example.demo.service;
 import java.util.Random;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import com.example.demo.model.CookieModel;
-
 public class service {
-
+//	generate random value for cookies
 	public String generateRandomValue(){
 		Random r = new Random();
         StringBuilder sb = new StringBuilder();
@@ -18,20 +13,4 @@ public class service {
         return sb.toString().substring(0, 30);
 	}
 	
-	public CookieModel getCookieDetails(HttpServletRequest servletRequest) {
-
-        CookieModel model = new CookieModel();
-
-        for (Cookie cookie : servletRequest.getCookies()) {
-            if (cookie.getName().equals("JSESSIONID")) {
-                model.setSessionId(cookie.getValue());
-            }
-            
-            if (cookie.getName().equals("x-csrf-token")) {
-                model.setCsrfToken(cookie.getValue());
-            }
-        }
-
-        return model;
-    }
 }

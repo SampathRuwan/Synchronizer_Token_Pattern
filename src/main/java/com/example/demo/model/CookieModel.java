@@ -4,7 +4,7 @@ public class CookieModel {
 
 	private String sessionId;
     private String csrfToken;
-    private String Id;
+    private String amount;
 
     public String getSessionId() {
         return sessionId;
@@ -22,12 +22,12 @@ public class CookieModel {
         this.csrfToken = csrfToken;
     }
 
-	public String getId() {
-		return Id;
+	public String getAmount() {
+		return amount;
 	}
 
-	public void setId(String id) {
-		Id = id;
+	public void setAmount(String amount) {
+		this.amount = amount;
 	}
 	
 }

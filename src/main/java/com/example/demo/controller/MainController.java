@@ -28,36 +28,30 @@ public class MainController {
 	
 	@GetMapping("/")
 	public String home(HttpServletRequest request){
-		System.out.println("load "+request.getCookies());
 		return "login.html";
-	}
-	
-//	@PostMapping("/csrf")
-//    public String GenerateCSRF(HttpServletResponse servletResponse){
-//		
-//		String csrfToken = serviceObj.generateRandomValue();
-//        System.out.println("CSRF TOKEN : " + csrfToken);
-//
-//        return "{\"value\":\"csreToken\"}";
-//    }
+	}	
 		
 	@PostMapping("/usercredentials")
 	public String submit(@ModelAttribute("User") User user, BindingResult result,
 			HttpServletResponse response){
-		
+
+//		validate logins
 		if(user.getUserName().equals("admin") && user.getUserPwd().equals("admin")){
-			
+//			random value for session Id
 			String ssId = serviceObj.generateRandomValue();
 			
 			Cookie c1 = new Cookie("ssId",ssId);
-			c1.setMaxAge(600*600); //1 hour
-			c1.setSecure(true);			
+			c1.setMaxAge(600*600); //1 hour (expire time)
+			c1.setSecure(false);			
 			response.addCookie(c1);
 			
+//			store session Id 
 			cookieStore.put("ssId", ssId);
 		
+//			store csrf token (random seed)
 			cookieStore.put("random_seed", serviceObj.generateRandomValue());			
 			
+//			redirect to the userPage
 			return "redirect:userPage.html";
 		}else
 		
@@ -67,7 +61,19 @@ public class MainController {
 	@PostMapping("/getcsrftoken")
 	public ResponseEntity<String> cookie(HttpServletResponse response, HttpServletRequest request){
 		String x = cookieStore.get("random_seed");
-		return ResponseEntity.status(HttpStatus.OK).body(x);
+		//get all cookies from request
+		Cookie[] cookies = request.getCookies();
+		
+		if(cookies != null) {
+			 for (Cookie cookie : cookies){
+				//validate the session cookie and send csrf 
+				if (cookie.getValue().equals(cookieStore.get("ssId"))) {
+					return ResponseEntity.status(HttpStatus.OK).body(x);
+				}
+			 }
+		}
+		return ResponseEntity.status(HttpStatus.OK).body("error");
+
 	}
 	
 	@PostMapping("/userdetails")
@@ -76,31 +82,17 @@ public class MainController {
 		
 		//get all cookies from request
 		Cookie[] cookies = request.getCookies();
-		System.out.println(cookieStore.get("random_seed"));
-		System.out.println("html "+cModel.getCsrfToken());
-		System.out.println("ssId :"+ cookieStore.get("ssId"));
-		System.out.println("test "+request.getCookies());
 		
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
-				System.out.println("c : "+cookie);
-				//check session cookie and csrf token
-				if (cookie.getValue().equals(cookieStore.get("ssId")) && cModel.getCsrfToken().equals(cookieStore.get("random_seed"))) {
-//					System.out.println(cookieStore.get("random_seed"));
-					
-					return ResponseEntity.status(HttpStatus.OK).body("Success CSRF TOKEN");
+				//validate session cookie and csrf
+				if (cookie.getValue().equals(cookieStore.get("ssId")) && cModel.getCsrfToken().equals(cookieStore.get("random_seed"))) {	
+					return ResponseEntity.status(HttpStatus.OK).body("Transaction is success !!");
 				}
 			}
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error in Transaction !!");
 			
-//		if(cookieStore.get("random_seed").equals(cModel.getCsrfToken())){
-//			return ResponseEntity.status(HttpStatus.OK).body("Success CSRF TOKEN");
-//		}else{
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
-//		}
-		
-//		return "redirect:login.html";
 	}
 	
 	
