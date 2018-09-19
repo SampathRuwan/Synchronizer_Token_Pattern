@@ -10,7 +10,7 @@ This project was develop to demonstrate the Synchronizer Token pattern in cross-
   6. Open the application using "http://localhost:8080/".
 
 #### Sample Credentials
-user name : admin 
+User name : admin 
 
 Password : admin
   
